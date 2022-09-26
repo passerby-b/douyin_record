@@ -2,7 +2,15 @@ const moment = require('moment');
 const request = require("request")
 const fs = require('fs');
 
+let data = [];
 !(async () => {
+    data = fs.readFileSync('./douyin_down.json', 'UTF-8').toString();
+    data = JSON.parse(data);
+
+    fs.exists("./douyin", function (exists) {
+        //console.log(exists ? "创建成功" : "创建失败");
+        if (!exists) fs.mkdirSync("./douyin");
+    });
 
     main();
     setInterval(async () => {
@@ -17,8 +25,6 @@ const fs = require('fs');
 
 async function main() {
     try {
-        let data = fs.readFileSync('./douyin_down.json', 'UTF-8').toString();
-        data = JSON.parse(data);
 
         for (let iterator of data) {
             if (!iterator.status) iterator.status = 0;
