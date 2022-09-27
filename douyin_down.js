@@ -47,24 +47,28 @@ async function down(user) {
             }
         };
         request(option, (error, response, body) => {
+            try {
+                let RENDER_DATA = body.match(/<script id=\"RENDER_DATA\" type=\"application\/json\">.*?<\/script>/);
+                RENDER_DATA = RENDER_DATA[0].replace('<script id="RENDER_DATA" type="application/json">', '').replace('</script>', '');
+                RENDER_DATA = JSON.parse(decodeURIComponent(RENDER_DATA));
 
-            let RENDER_DATA = body.match(/<script id=\"RENDER_DATA\" type=\"application\/json\">.*?<\/script>/);
-            RENDER_DATA = RENDER_DATA[0].replace('<script id="RENDER_DATA" type="application/json">', '').replace('</script>', '');
-            RENDER_DATA = JSON.parse(decodeURIComponent(RENDER_DATA));
+                if (RENDER_DATA?.app?.initialState?.roomStore?.roomInfo?.room?.status == 2 && user.status == 0) {
+                    user.status = 1;
+                    console.log(user.name + ':开始下载!');
+                    let url = RENDER_DATA.app.initialState.roomStore.roomInfo.room.stream_url.flv_pull_url.FULL_HD1;
+                    let videoName = RENDER_DATA.app.initialState.roomStore.roomInfo.room.owner.nickname;
+                    let title = RENDER_DATA.app.initialState.roomStore.roomInfo.room.title;
+                    let file_name = `${moment().format('YYYY-MM-DD HH-mm-ss')}[${videoName}-${title}].flv`;
+                    downloadFile(url, './douyin/' + file_name);
+                }
+                if (RENDER_DATA?.app?.initialState?.roomStore?.roomInfo?.room?.status != 2) {
+                    user.status = 0;
+                    console.log(user.name + ':未开播!');
+                }
+            } catch (error) {
+                console.log('error:' + error);
+            }
 
-            if (RENDER_DATA.app.initialState.roomStore.roomInfo.room.status == 2 && user.status == 0) {
-                user.status = 1;
-                console.log(user.name + ':开始下载!');
-                let url = RENDER_DATA.app.initialState.roomStore.roomInfo.room.stream_url.flv_pull_url.FULL_HD1;
-                let videoName = RENDER_DATA.app.initialState.roomStore.roomInfo.room.owner.nickname;
-                let title = RENDER_DATA.app.initialState.roomStore.roomInfo.room.title;
-                let file_name = `${moment().format('YYYY-MM-DD HH-mm-ss')}[${videoName}-${title}].flv`;
-                downloadFile(url, './douyin/' + file_name);
-            }
-            if (RENDER_DATA.app.initialState.roomStore.roomInfo.room.status != 2) {
-                user.status = 0;
-                console.log(user.name + ':未开播!');
-            }
         })
     } catch (error) {
         console.log('error222:' + error);
