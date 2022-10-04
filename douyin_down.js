@@ -6,6 +6,9 @@ let data = [];
 !(async () => {
     data = fs.readFileSync('./douyin_down.json', 'UTF-8').toString();
     data = JSON.parse(data);
+    for (let iterator of data) {
+        if (!iterator.status) iterator.status = 0;
+    }
 
     fs.exists("./douyin", function (exists) {
         //console.log(exists ? "创建成功" : "创建失败");
@@ -27,7 +30,6 @@ async function main() {
     try {
 
         for (let iterator of data) {
-            if (!iterator.status) iterator.status = 0;
             down(iterator);
         }
     } catch (error) {
