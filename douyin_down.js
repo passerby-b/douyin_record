@@ -4,11 +4,8 @@ const fs = require('fs');
 
 let data = [];
 !(async () => {
-    data = fs.readFileSync('./douyin_down.json', 'UTF-8').toString();
+    data = fs.readFileSync('./douyin_record.json', 'UTF-8').toString();
     data = JSON.parse(data);
-    for (let iterator of data) {
-        if (!iterator.status) iterator.status = 0;
-    }
 
     fs.exists("./douyin", function (exists) {
         //console.log(exists ? "创建成功" : "创建失败");
@@ -30,6 +27,7 @@ async function main() {
     try {
 
         for (let iterator of data) {
+            if (!iterator.status) iterator.status = 0;
             down(iterator);
         }
     } catch (error) {
@@ -70,7 +68,6 @@ async function down(user) {
             } catch (error) {
                 console.log('error:' + error);
             }
-
         })
     } catch (error) {
         console.log('error222:' + error);
@@ -78,11 +75,9 @@ async function down(user) {
 }
 
 function showProgress(received, total) {
-
     //var percentage = (received * 100) / total;
     //console.log(percentage + "% | " + received + " bytes out of " + total + " bytes.");
 
-    //console.log();
     if (((received / 1000000).toString().split('.')[0]) % 10 == 0) {
         console.log(received / 1000000 + 'M');
     }
