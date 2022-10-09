@@ -1,7 +1,7 @@
 # douyin_record
 抖音录播
 
-跨平台,支持window,linux,macos,下面以window为例:  
+跨平台,支持windows,linux,macos,下面以windows为例:  
 
 1.安装nodejs运行环境,去nodejs官网下载对应的版本安装  
 2.下载源代码到本地,按住shift键鼠标右键->在此处打开命令窗口  
