@@ -1,11 +1,16 @@
 const moment = require('moment');
 const request = require("request")
 const fs = require('fs');
+const toml = require('toml');
 
 let data = [];
 !(async () => {
-    data = fs.readFileSync('./douyin_record.json', 'UTF-8').toString();
-    data = JSON.parse(data);
+    data = fs.readFileSync('./douyin_record.toml', 'UTF-8').toString();
+
+    data = await new Promise(resolve => {
+        data = toml.parse(data);
+        resolve(data);
+    })
 
     fs.exists("./douyin", function (exists) {
         //console.log(exists ? "创建成功" : "创建失败");
@@ -26,9 +31,12 @@ let data = [];
 async function main() {
     try {
 
-        for (let iterator of data) {
-            if (!iterator.status) iterator.status = 0;
-            down(iterator);
+        for (const key in data.list) {
+            if (!data.list[key].status) {
+                data.list[key].name = key;
+                data.list[key].status = 0;
+            }
+            down(data.list[key]);
         }
     } catch (error) {
         console.log('error111:' + error);
