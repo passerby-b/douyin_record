@@ -1,4 +1,4 @@
-isMsg = false #是否开启开播提醒,false为关闭
+isMsg = true #是否开启开播提醒,false为关闭
 bark = "yPbu2P3nhw9D2Jn6XejoSE"#//开播通知,ios下载bark
 
 [list."靓仔儿"]
