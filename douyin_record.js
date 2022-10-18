@@ -3,14 +3,12 @@ const request = require("request")
 const fs = require('fs');
 const toml = require('toml');
 
-let data = [];
+let data = [], bark, isMsg;
 !(async () => {
-    data = fs.readFileSync('./douyin_record.toml', 'UTF-8').toString();
-
-    data = await new Promise(resolve => {
-        data = toml.parse(data);
-        resolve(data);
-    })
+    let file = fs.readFileSync('./douyin_record.toml', 'UTF-8').toString();
+    data = toml.parse(file);
+    bark = data.bark;
+    isMsg = data.isMsg;
 
     fs.exists("./douyin", function (exists) {
         //console.log(exists ? "创建成功" : "创建失败");
@@ -63,10 +61,14 @@ async function down(user) {
                 if (RENDER_DATA?.app?.initialState?.roomStore?.roomInfo?.room?.status == 2 && user.status == 0) {
                     user.status = 1;
                     console.log(user.name + ':开始下载!');
+
                     let url = RENDER_DATA.app.initialState.roomStore.roomInfo.room.stream_url.flv_pull_url.FULL_HD1;
                     let videoName = RENDER_DATA.app.initialState.roomStore.roomInfo.room.owner.nickname;
                     let title = RENDER_DATA.app.initialState.roomStore.roomInfo.room.title;
                     let file_name = `${moment().format('YYYY-MM-DD HH-mm-ss')}[${videoName}-${title}].flv`;
+                    let icon = RENDER_DATA.app.initialState.roomStore.roomInfo.room?.owner?.avatar_thumb?.url_list[0];
+
+                    if (isMsg) request({ url: `https://api.day.app/${bark}/${encodeURIComponent(`抖音开播提醒`)}/${encodeURIComponent(`${videoName}[${title}]`)}?icon=${icon}` });
                     downloadFile(url, './douyin/' + file_name);
                 }
                 if (RENDER_DATA?.app?.initialState?.roomStore?.roomInfo?.room?.status != 2) {
