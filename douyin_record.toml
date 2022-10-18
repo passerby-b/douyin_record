@@ -1,5 +1,8 @@
+isMsg = false #是否开启开播提醒,false为关闭
+bark = "yPbu2P3nhw9D2Jn6XejoSE"#//开播通知,ios下载bark
+
 [list."靓仔儿"]
-roomid="654606568781"
+roomid="88888888SL."
 
 [list."爱否科技"]
 roomid="wu274814691"
